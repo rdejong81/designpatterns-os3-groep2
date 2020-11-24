@@ -21,24 +21,37 @@ public class Keyboard {
     public Keyboard(Component component) {
         this.component = component;
 
-        // Check on a timer if a new event was triggered
-        Timer timer = new Timer(50, new ActionListener() {
-            private String lastPoint;
+        this.component.addKeyListener(new KeyListener()
+        {
+            private char lastPoint;
 
             @Override
-            public synchronized void actionPerformed(ActionEvent e) {
-                // Get current mouse location
-                String key = KeyEvent.getKeyCode();
+            public void keyTyped(KeyEvent e)
+            {
 
-                // Check if current position is not the same as previous
-                if (!key.equals(lastPoint)) {
-                    fireListener(key);
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e)
+            {
+                char key = e.getKeyChar();
+
+                // Check if current key is not the same as previous
+                if (key != lastPoint) {
+                    fireListener(key,e.getKeyCode());
                 }
                 lastPoint = key;
             }
+
+            @Override
+            public void keyReleased(KeyEvent e)
+            {
+
+            }
         });
+
         this.keyListeners = new HashSet<>();
-        timer.start();
+
     }
 
     /**
@@ -55,14 +68,14 @@ public class Keyboard {
     /**
      * When listener is fired add information to object
      *
-     * @param $key
+     * @param key
      */
-    public void fireListener(String $key) {
+    public void fireListener(char key, int keyCode) {
         synchronized (this.keyListeners) {
             for (final KeyListener listener : this.keyListeners) {
                 final KeyEvent event =
-                        new KeyEvent(this.component, MouseEvent.MOUSE_MOVED, System.currentTimeMillis(),
-                                0, listener.hashCode());
+                        new KeyEvent(this.component, KeyEvent.KEY_PRESSED, System.currentTimeMillis(),
+                                0, keyCode, key);
 
                 SwingUtilities.invokeLater(() -> listener.keyPressed(event));
             }

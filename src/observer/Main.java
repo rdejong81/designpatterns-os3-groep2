@@ -11,6 +11,10 @@ class Main {
     public static void main(String[] args) {
 
         JFrame main = new JFrame();
+        main.setSize(640,400);
+
+        main.setVisible(true);
+
 
         Mouse mouse = new Mouse(main);
         mouse.addListener(new MouseMotionListener() {
