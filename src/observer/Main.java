@@ -1,6 +1,7 @@
 package observer;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -10,12 +11,15 @@ class Main {
 
     public static void main(String[] args) {
 
-        JFrame main = new JFrame();
-        main.setSize(640,400);
-
+        JFrame main = new JFrame("Sketch");
+        main.setSize(640, 400);
         main.setVisible(true);
 
+        // Add drawer panel
+        Drawer drawer = new Drawer();
+        main.setContentPane(drawer);
 
+        // Add mouse listener
         Mouse mouse = new Mouse(main);
         mouse.addListener(new MouseMotionListener() {
             @Override
@@ -25,11 +29,11 @@ class Main {
 
             @Override
             public void mouseMoved(MouseEvent e) {
-                System.out.println("X " + e.getX() + " - Y " + e.getY());
+                drawer.draw(new Point(e.getX(), e.getY()));
             }
-
         });
 
+        // Add keyboard listener
         Keyboard keyboard = new Keyboard(main);
         keyboard.addListener(new KeyListener() {
             @Override
@@ -39,7 +43,7 @@ class Main {
 
             @Override
             public void keyPressed(KeyEvent e) {
-                System.out.println(e);
+                System.out.println(e.getKeyChar() + " pressed");
             }
 
             @Override

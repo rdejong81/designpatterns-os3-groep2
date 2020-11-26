@@ -2,8 +2,8 @@ package observer;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
-import java.security.Key;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -21,31 +21,27 @@ public class Keyboard {
     public Keyboard(Component component) {
         this.component = component;
 
-        this.component.addKeyListener(new KeyListener()
-        {
+        this.component.addKeyListener(new KeyListener() {
             private char lastPoint;
 
             @Override
-            public void keyTyped(KeyEvent e)
-            {
+            public void keyTyped(KeyEvent e) {
 
             }
 
             @Override
-            public void keyPressed(KeyEvent e)
-            {
+            public void keyPressed(KeyEvent e) {
                 char key = e.getKeyChar();
 
                 // Check if current key is not the same as previous
                 if (key != lastPoint) {
-                    fireListener(key,e.getKeyCode());
+                    fireListener(key, e.getKeyCode());
                 }
                 lastPoint = key;
             }
 
             @Override
-            public void keyReleased(KeyEvent e)
-            {
+            public void keyReleased(KeyEvent e) {
 
             }
         });
@@ -68,7 +64,7 @@ public class Keyboard {
     /**
      * When listener is fired add information to object
      *
-     * @param key
+     * @param key pressed key
      */
     public void fireListener(char key, int keyCode) {
         synchronized (this.keyListeners) {

@@ -2,9 +2,8 @@ package observer;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.HashSet;
 import java.util.Set;
@@ -14,6 +13,9 @@ public class Mouse {
 
     private final Component component;
 
+    private Point lastPoint;
+    private boolean isDrawing = false;
+
     /**
      * Start timer to check if a action was performec
      *
@@ -22,24 +24,55 @@ public class Mouse {
     public Mouse(Component component) {
         this.component = component;
 
-        // Check on a timer if a new event was triggered
-        Timer timer = new Timer(50, new ActionListener() {
-            private Point lastPoint = MouseInfo.getPointerInfo().getLocation();
+        // Mouse motion listener
+        component.addMouseMotionListener(new MouseMotionListener() {
+            @Override
+            public void mouseDragged(MouseEvent e) {
+
+            }
 
             @Override
-            public synchronized void actionPerformed(ActionEvent e) {
+            public void mouseMoved(MouseEvent e) {
                 // Get current mouse location
-                Point point = MouseInfo.getPointerInfo().getLocation();
+                Point point = new Point(e.getX(), e.getY());
 
                 // Check if current position is not the same as previous
-                if (!point.equals(lastPoint)) {
+                if (!point.equals(lastPoint) && isDrawing) {
                     fireListener(point);
                 }
                 lastPoint = point;
             }
         });
+
+        // Mouse listener
+        component.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                isDrawing = !isDrawing;
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+
+            }
+        });
+
         this.mouseMotionListeners = new HashSet<>();
-        timer.start();
+
     }
 
     /**
