@@ -3,12 +3,14 @@ package Listener;
 import javax.swing.*;
 import java.awt.*;
 
-public class PointDrawerSubscriber extends JPanel implements IObserver {
+public class PointDrawerSubscriber extends JPanel implements IObserver<Point> {
 
     private Point point;
 
     public void paintComponent(Graphics g) {
-        if (point != null) {
+
+        if (point != null)
+        {
             g.setColor(Color.red);
             g.fillOval(point.x - 20, point.y - 40, 20, 20);
         }
@@ -17,6 +19,8 @@ public class PointDrawerSubscriber extends JPanel implements IObserver {
     @Override
     public void update(Point point) {
         this.point = point;
-        repaint();
+
+        this.paintComponent(this.getGraphics());
+
     }
 }

@@ -2,6 +2,6 @@ package Listener;
 
 import java.awt.*;
 
-public interface IObserver {
-    void update(Point point);
+public interface IObserver<Type> {
+    void update(Type value);
 }

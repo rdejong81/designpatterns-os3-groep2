@@ -4,17 +4,14 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PointPublisher {
+public class PointPublisher implements IObservable<Point> {
 
     private final List<IObserver> subscribers = new ArrayList<>();
     private Point point;
 
-    public void subscribe(IObserver subscriber) {
+    public IDisposable subscribe(IObserver<Point> subscriber) {
         this.subscribers.add(subscriber);
-    }
-
-    public void unSubscribe(IObserver subscriber) {
-        this.subscribers.remove(subscriber);
+        return () -> { this.subscribers.remove(subscriber); };
     }
 
     public void notifySubscribers() {

@@ -2,36 +2,61 @@ package Listener;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
+import java.awt.event.*;
 
-public class MainWindow {
+import static java.awt.event.InputEvent.*;
+
+public class MainWindow
+{
 
     private PointPublisher pointPublisher;
     private PointDrawerSubscriber pointDrawer;
+    private IDisposable subscriptionDrawer;
+    private JFrame main;
 
-    public MainWindow() {
+    public MainWindow(PointPublisher pointPublisher,WindowListener windowListener) {
 
         // Initialize components
-        JFrame main = new JFrame("Sketch");
+        main = new JFrame("MainWindow");
         main.setSize(640, 400);
-        main.setVisible(true);
 
-        this.pointPublisher = new PointPublisher();
+        this.pointPublisher = pointPublisher;
         this.pointDrawer = new PointDrawerSubscriber();
 
-        // Subscribe to publisher
-        this.pointPublisher.subscribe(this.pointDrawer);
+        main.addWindowListener(windowListener);
 
         // Add pane to window
         main.setContentPane(this.pointDrawer);
+        main.setVisible(true);
+
+        // Add subscription button
+
+        Button button = new Button("Toggle subscribe/unsubscribe");
+        main.add(button);
+        button.addActionListener((e)->{
+            if(subscriptionDrawer == null)
+            // Subscribe to publisher
+                subscriptionDrawer = this.pointPublisher.subscribe(this.pointDrawer); else
+            {
+                subscriptionDrawer.dispose();
+                subscriptionDrawer = null;
+            }
+            main.setTitle(subscriptionDrawer == null ? "MainWindow" : "MainWindow (Subscribed)" );
+        });
 
         // Add mouse listeners
         main.addMouseListener(new MouseListener() {
             @Override
             public void mousePressed(MouseEvent e) {
-                pointPublisher.setPoint(new Point(e.getX(), e.getY()));
+                // left mouse button
+                if((e.getModifiersEx() & BUTTON1_DOWN_MASK) == BUTTON1_DOWN_MASK && subscriptionDrawer != null)
+                    pointPublisher.setPoint(new Point(e.getX(), e.getY()));
+                // right mouse button
+                if((e.getModifiersEx() & BUTTON3_DOWN_MASK) == BUTTON3_DOWN_MASK)
+                {
+                    MainWindow newWindow = new MainWindow(pointPublisher,windowListener);
+                    newWindow.setPosition(main);
+                }
             }
             // Not used
             public void mouseClicked(MouseEvent e) {}
@@ -42,11 +67,20 @@ public class MainWindow {
 
         main.addMouseMotionListener(new MouseMotionListener() {
             @Override
-            public void mouseDragged(MouseEvent e) {
-                pointPublisher.setPoint(new Point(e.getX(), e.getY()));
+            public void mouseDragged(MouseEvent e)
+            {
+                // left mouse button
+                if((e.getModifiersEx() & BUTTON1_DOWN_MASK) == BUTTON1_DOWN_MASK && subscriptionDrawer != null)
+                    pointPublisher.setPoint(new Point(e.getX(), e.getY()));
             }
             // Not used
             public void mouseMoved(MouseEvent e) {}
         });
+    }
+
+    void setPosition(Component component)
+    {
+        this.main.setLocationRelativeTo(component);
+        this.main.setLocation(component.getLocation().x+50,component.getLocation().y+50);
     }
 }
