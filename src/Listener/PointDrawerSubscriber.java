@@ -1,16 +1,12 @@
-package observer;
+package Listener;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class Drawer extends JPanel {
+public class PointDrawerSubscriber extends JPanel implements IObserver {
+
     private Point point;
 
-    /**
-     * Actually draw oval on screen
-     *
-     * @param g Graphics
-     */
     public void paintComponent(Graphics g) {
         if (point != null) {
             g.setColor(Color.red);
@@ -18,12 +14,8 @@ public class Drawer extends JPanel {
         }
     }
 
-    /**
-     * Start drawing
-     *
-     * @param point Point containing X and Y axes
-     */
-    public void draw(Point point) {
+    @Override
+    public void update(Point point) {
         this.point = point;
         repaint();
     }
