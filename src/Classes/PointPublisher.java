@@ -1,9 +1,5 @@
 package Classes;
 
-import Classes.IDisposable;
-import Classes.IObservable;
-import Classes.IObserver;
-
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,10 +19,6 @@ public class PointPublisher implements IObservable<Point>
         for (IObserver<Point> subscriber : subscribers) {
             subscriber.update(this.point);
         }
-    }
-
-    public Point getPoint() {
-        return point;
     }
 
     public void setPoint(Point point) {
