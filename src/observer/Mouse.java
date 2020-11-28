@@ -8,6 +8,8 @@ import java.awt.event.MouseMotionListener;
 import java.util.HashSet;
 import java.util.Set;
 
+import static java.awt.event.InputEvent.BUTTON1_DOWN_MASK;
+
 public class Mouse {
     private final Set<MouseMotionListener> mouseMotionListeners;
 
@@ -28,7 +30,14 @@ public class Mouse {
         component.addMouseMotionListener(new MouseMotionListener() {
             @Override
             public void mouseDragged(MouseEvent e) {
+                // Get current mouse location
+                Point point = new Point(e.getX(), e.getY());
 
+                // Check if current position is not the same as previous
+                if (!point.equals(lastPoint) && isDrawing) {
+                    fireListener(point);
+                }
+                lastPoint = point;
             }
 
             @Override
@@ -48,16 +57,25 @@ public class Mouse {
         component.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
-
             }
 
             @Override
             public void mousePressed(MouseEvent e) {
-                isDrawing = !isDrawing;
+                if((e.getModifiersEx() & BUTTON1_DOWN_MASK) == BUTTON1_DOWN_MASK)
+                {
+                    isDrawing = true;
+                    // Get current mouse location
+                    Point point = new Point(e.getX(), e.getY());
+
+                    fireListener(point);
+                    lastPoint = point;
+                }
             }
 
             @Override
             public void mouseReleased(MouseEvent e) {
+                if((e.getModifiersEx() & BUTTON1_DOWN_MASK) != BUTTON1_DOWN_MASK)
+                    isDrawing = false;
             }
 
             @Override
