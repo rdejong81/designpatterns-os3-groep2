@@ -12,8 +12,10 @@ public class Drawer extends JPanel {
      * @param g Graphics
      */
     public void paintComponent(Graphics g) {
-        g.setColor(Color.red);
-        g.fillOval(point.x - 20, point.y - 40, 20, 20);
+        if (point != null) {
+            g.setColor(Color.red);
+            g.fillOval(point.x - 20, point.y - 40, 20, 20);
+        }
     }
 
     /**
