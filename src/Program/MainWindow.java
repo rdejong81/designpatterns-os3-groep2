@@ -1,4 +1,9 @@
-package Listener;
+package Program;
+
+import Classes.IDisposable;
+import Classes.PointDrawerSubscriber;
+import Classes.PointPublisher;
+import Classes.PointWriterSubscriber;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,9 +14,11 @@ import static java.awt.event.InputEvent.*;
 public class MainWindow
 {
 
-    private PointPublisher pointPublisher;
-    private PointDrawerSubscriber pointDrawer;
+    private final PointPublisher pointPublisher;
+    private final PointDrawerSubscriber pointDrawer;
+    private PointWriterSubscriber pointWriterSubscriber;
     private IDisposable subscriptionDrawer;
+    private IDisposable subscriptionWriter;
     private JFrame main;
 
     public MainWindow(PointPublisher pointPublisher,WindowListener windowListener) {
@@ -22,6 +29,7 @@ public class MainWindow
 
         this.pointPublisher = pointPublisher;
         this.pointDrawer = new PointDrawerSubscriber();
+        this.pointWriterSubscriber = new PointWriterSubscriber(pointDrawer);
 
         main.addWindowListener(windowListener);
 
@@ -30,16 +38,21 @@ public class MainWindow
         main.setVisible(true);
 
         // Add subscription button
-
         Button button = new Button("Toggle subscribe/unsubscribe");
         main.add(button);
         button.addActionListener((e)->{
             if(subscriptionDrawer == null)
-            // Subscribe to publisher
-                subscriptionDrawer = this.pointPublisher.subscribe(this.pointDrawer); else
+            {
+                // Subscribe to publisher
+                subscriptionDrawer = this.pointPublisher.subscribe(this.pointDrawer);
+                subscriptionWriter = this.pointPublisher.subscribe(this.pointWriterSubscriber);
+            }
+            else
             {
                 subscriptionDrawer.dispose();
                 subscriptionDrawer = null;
+                subscriptionWriter.dispose();
+                subscriptionWriter = null;
             }
             main.setTitle(subscriptionDrawer == null ? "MainWindow" : "MainWindow (Subscribed)" );
         });

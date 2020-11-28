@@ -1,4 +1,6 @@
-package Listener;
+package Program;
+
+import Classes.PointPublisher;
 
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;

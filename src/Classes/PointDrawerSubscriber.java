@@ -1,9 +1,12 @@
-package Listener;
+package Classes;
+
+import Classes.IObserver;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class PointDrawerSubscriber extends JPanel implements IObserver<Point> {
+public class PointDrawerSubscriber extends JPanel implements IObserver<Point>
+{
 
     private Point point;
 
