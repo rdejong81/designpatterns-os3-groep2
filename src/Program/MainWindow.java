@@ -1,6 +1,6 @@
 package Program;
 
-import Classes.IDisposable;
+import interfaces.IDisposable;
 import Classes.PointDrawerSubscriber;
 import Classes.PointPublisher;
 import Classes.PointWriterSubscriber;
