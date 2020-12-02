@@ -1,7 +1,5 @@
 package Classes;
 
-import Classes.IObserver;
-
 import javax.swing.*;
 import java.awt.*;
 
