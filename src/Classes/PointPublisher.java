@@ -1,9 +1,5 @@
 package Classes;
 
-import interfaces.IDisposable;
-import interfaces.IObservable;
-import interfaces.IObserver;
-
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
